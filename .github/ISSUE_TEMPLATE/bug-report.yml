@@ -1,0 +1,38 @@
+name: Bug report
+description: Something in the system is broken or behaves incorrectly.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. A minimal example helps us
+        reproduce it fast.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the unexpected behaviour and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Exact commands or steps. Include your Python version.
+      placeholder: |
+        python3 scripts/memory_refresh.py --strict
+        Python 3.11.x
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output / lint findings
+      render: shell
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 14 / Ubuntu 24.04 / Windows 11
+    validations:
+      required: false

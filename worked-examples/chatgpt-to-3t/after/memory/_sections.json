@@ -1,0 +1,26 @@
+{
+  "sections": [
+    {
+      "id": "active-trips",
+      "title": "Active trips",
+      "source": "projects",
+      "order": 1,
+      "columns": [
+        {"key": "title", "header": "Trip"},
+        {"key": "stage", "header": "Stage"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]},
+        {"key": "_link", "header": "Detail", "link": true}
+      ]
+    },
+    {
+      "id": "watchlist",
+      "title": "Watchlist",
+      "source": "watchlist",
+      "order": 2,
+      "columns": [
+        {"key": "project", "header": "Item"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]}
+      ]
+    }
+  ]
+}

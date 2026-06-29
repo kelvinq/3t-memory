@@ -1,0 +1,36 @@
+name: lint
+
+# Regenerates the bundled example workspace and strict-lints it on every push,
+# pull request, and manual dispatch. The package root is a starter kit, so CI
+# validates the self-contained example/ workspace instead.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Rebuild + strict-lint the example workspace
+        working-directory: example
+        run: |
+          python3 scripts/memory_refresh.py --strict
+
+      - name: Verify rebuild idempotency
+        working-directory: example
+        run: |
+          cp memory/core.md /tmp/core_before.md
+          python3 scripts/rebuild-memory-core.py >/dev/null
+          diff -q /tmp/core_before.md memory/core.md && echo "idempotent: core.md stable across two runs"

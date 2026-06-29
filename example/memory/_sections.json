@@ -1,0 +1,37 @@
+{
+  "sections": [
+    {
+      "id": "active-work",
+      "title": "Active work",
+      "source": "projects",
+      "order": 1,
+      "columns": [
+        {"key": "title", "header": "Project"},
+        {"key": "stage", "header": "Stage"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]},
+        {"key": "_link", "header": "Detail", "link": true}
+      ]
+    },
+    {
+      "id": "references",
+      "title": "Reference notes",
+      "source": "projects",
+      "order": 2,
+      "columns": [
+        {"key": "title", "header": "Note"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]},
+        {"key": "_link", "header": "Detail", "link": true}
+      ]
+    },
+    {
+      "id": "watchlist",
+      "title": "Watchlist",
+      "source": "watchlist",
+      "order": 3,
+      "columns": [
+        {"key": "project", "header": "Item"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]}
+      ]
+    }
+  ]
+}
