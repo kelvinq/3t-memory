@@ -1,4 +1,4 @@
-# QUICKSTART — from zero to a working memory system
+# QUICKSTART: from zero to a working memory system
 
 This guide takes you from an empty folder to a lint-clean, self-regenerating
 memory system holding **your own** documents. It assumes only Python 3.9+.
@@ -14,6 +14,9 @@ placeholder for you to replace.
 my-workspace/
 ├── AGENTS.md
 ├── OPERATOR.md
+├── inbox/
+│   ├── index.md
+│   └── pending-user/
 ├── memory/
 │   ├── core.md
 │   ├── _sections.json
@@ -21,9 +24,9 @@ my-workspace/
 │   └── projects/
 │       ├── README.md          # generated
 │       ├── archive/
-│       └── acme-launch.md
+│       └── unilever-launch.md
 ├── materials/
-│   └── acme-launch/
+│   └── unilever-launch/
 │       ├── 01-inputs/
 │       ├── 02-working/
 │       └── 03-deliverables/
@@ -42,12 +45,12 @@ cp -r /path/to/3t-memory/{AGENTS.md,OPERATOR.md,README.md,QUICKSTART.md,memory,t
 ```
 
 You should now have `AGENTS.md`, `scripts/`, `templates/`, and a `memory/`
-folder containing `_sections.json`? — not yet. The package ships a minimal
+folder containing `_sections.json`. Not yet. The package ships a minimal
 `memory/` with only `watchlist.json`. Create the schema and core file next.
 
 ## 2. Write your `AGENTS.md`
 
-Open `AGENTS.md` and replace the placeholders. This is your procedural memory —
+Open `AGENTS.md` and replace the placeholders. This is your procedural memory:
 the rules any agent (human or AI) follows in this workspace. Keep it short.
 
 ## 3. Create `memory/core.md` from the template
@@ -57,12 +60,12 @@ cp templates/memory-core.md memory/core.md
 ```
 
 Edit it:
-- set `owner:` and the `# Memory — <owner / role>` heading,
+- set `owner:` and the `# Memory: <owner / role>` heading,
 - write 2–5 paragraphs of **Purpose & context**,
 - list your **Key collaborators**.
 
 Leave the `<!-- memory-sections:start --> … <!-- memory-sections:end -->`
-markers exactly where they are — the rebuild script fills between them.
+markers exactly where they are; the rebuild script fills between them.
 
 ## 4. Define your sections in `memory/_sections.json`
 
@@ -106,12 +109,12 @@ Rules:
 - `source: "watchlist"` → the section renders rows from `memory/watchlist.json`.
 - `columns[].key` is a frontmatter field name (e.g. `title`, `client`,
   `stage`, `next_review_date`).
-- `columns[].compose` joins several fields with " — " (handy for status lines).
+- `columns[].compose` joins several fields with ": " (handy for status lines).
 - `columns[].link: true` renders a markdown link to the project file. Use it on
   a column whose `key` is `_link`.
 - `order` controls section ordering (otherwise declaration order is used).
 
-You can define as many project-sourced sections as you like — e.g.
+You can define as many project-sourced sections as you like, e.g.
 `active-engagements`, `internal-initiatives`, `references`. Each project file
 opts into one section via its `core_section` frontmatter value.
 
@@ -119,7 +122,7 @@ opts into one section via its `core_section` frontmatter value.
 
 ```bash
 mkdir -p memory/projects/archive
-cp templates/memory-project.md memory/projects/acme-launch.md
+cp templates/memory-project.md memory/projects/unilever-launch.md
 ```
 
 Fill the frontmatter. **The `core_section` value must match a section `id` from
@@ -127,9 +130,9 @@ Fill the frontmatter. **The `core_section` value must match a section `id` from
 
 ```yaml
 ---
-id: "acme-launch"
-title: "Acme product launch plan"
-client: "Acme"
+id: "unilever-launch"
+title: "Unilever product launch plan"
+client: "Unilever"
 owner: "<owner>"
 status_date: "2026-06-27"
 status_summary: "Drafting launch brief; awaiting marketing assets."
@@ -156,7 +159,7 @@ python3 scripts/memory_refresh.py
 
 You should see the rebuild succeed, the section tables injected into
 `memory/core.md`, a generated `memory/projects/README.md`, and a lint summary
-with **0 errors**. If lint reports warnings, read them — most are missing
+with **0 errors**. If lint reports warnings, read them; most are missing
 frontmatter fields or unresolved document paths.
 
 ## 7. Run it again to confirm idempotency
@@ -174,86 +177,86 @@ The generated block is byte-stable across runs (within the same calendar day).
 
 This is the step most templates hand-wave. Here is the exact before/after.
 
-### Before — a pile of scattered files
+### Before: a pile of scattered files
 
 Imagine you have these loose files in a downloads folder:
 
 ```text
 ~/Downloads/
-├── acme-kickoff-transcript.txt          # meeting transcript
-├── acme-brief.docx                       # the engagement brief
-├── acme-launch-deck.pptx                 # draft deck
-└── acme-budget.xlsx                      # budget spreadsheet
+├── unilever-kickoff-transcript.txt          # meeting transcript
+├── unilever-brief.docx                       # the engagement brief
+├── unilever-launch-deck.pptx                 # draft deck
+└── unilever-budget.xlsx                      # budget spreadsheet
 ```
 
-They are evidence for the `acme-launch` project, but they are not filed or
+They are evidence for the `unilever-launch` project, but they are not filed or
 linked from anywhere.
 
-### Step 8a — create the project's archive folders
+### Step 8a: create the project's archive folders
 
 ```bash
-mkdir -p materials/acme-launch/{01-inputs,02-working,03-deliverables}
+mkdir -p materials/unilever-launch/{01-inputs,02-working,03-deliverables}
 ```
 
-### Step 8b — file each document by role
+### Step 8b: file each document by role
 
 | File | Role in the project | Destination |
 |---|---|---|
-| `acme-kickoff-transcript.txt` | raw input — a meeting record | `materials/acme-launch/01-inputs/` |
-| `acme-brief.docx` | raw input — the source brief | `materials/acme-launch/01-inputs/` |
-| `acme-budget.xlsx` | working artefact — numbers you iterate on | `materials/acme-launch/02-working/` |
-| `acme-launch-deck.pptx` | deliverable — the thing you ship | `materials/acme-launch/03-deliverables/` |
+| `unilever-kickoff-transcript.txt` | raw input, a meeting record | `materials/unilever-launch/01-inputs/` |
+| `unilever-brief.docx` | raw input, the source brief | `materials/unilever-launch/01-inputs/` |
+| `unilever-budget.xlsx` | working artefact, numbers you iterate on | `materials/unilever-launch/02-working/` |
+| `unilever-launch-deck.pptx` | deliverable, the thing you ship | `materials/unilever-launch/03-deliverables/` |
 
 Move them:
 
 ```bash
-mv ~/Downloads/acme-kickoff-transcript.txt materials/acme-launch/01-inputs/
-mv ~/Downloads/acme-brief.docx            materials/acme-launch/01-inputs/
-mv ~/Downloads/acme-budget.xlsx           materials/acme-launch/02-working/
-mv ~/Downloads/acme-launch-deck.pptx      materials/acme-launch/03-deliverables/
+mv ~/Downloads/unilever-kickoff-transcript.txt materials/unilever-launch/01-inputs/
+mv ~/Downloads/unilever-brief.docx            materials/unilever-launch/01-inputs/
+mv ~/Downloads/unilever-budget.xlsx           materials/unilever-launch/02-working/
+mv ~/Downloads/unilever-launch-deck.pptx      materials/unilever-launch/03-deliverables/
 ```
 
 Result:
 
 ```text
-materials/acme-launch/
+materials/unilever-launch/
 ├── 01-inputs/
-│   ├── acme-kickoff-transcript.txt
-│   └── acme-brief.docx
+│   ├── unilever-kickoff-transcript.txt
+│   └── unilever-brief.docx
 ├── 02-working/
-│   └── acme-budget.xlsx
+│   └── unilever-budget.xlsx
 └── 03-deliverables/
-    └── acme-launch-deck.pptx
+    └── unilever-launch-deck.pptx
 ```
 
-### Step 8c — link them from the project file
+### Step 8c: link them from the project file
 
-Open `memory/projects/acme-launch.md` and edit the **Key documents** section so
+Open `memory/projects/unilever-launch.md` and edit the **Key documents** section so
 every filed document is referenced by its repo-relative path:
 
 ```markdown
 ## Key documents
 
-- `materials/acme-launch/01-inputs/acme-kickoff-transcript.txt` — kickoff meeting record
-- `materials/acme-launch/01-inputs/acme-brief.docx` — engagement brief
-- `materials/acme-launch/02-working/acme-budget.xlsx` — live budget
-- `materials/acme-launch/03-deliverables/acme-launch-deck.pptx` — draft launch deck
+- `materials/unilever-launch/01-inputs/unilever-kickoff-transcript.txt`, kickoff meeting record
+- `materials/unilever-launch/01-inputs/unilever-brief.docx`, engagement brief
+- `materials/unilever-launch/02-working/unilever-budget.xlsx`, live budget
+- `materials/unilever-launch/03-deliverables/unilever-launch-deck.pptx`, draft launch deck
 ```
 
-### Step 8d — refresh and lint
+### Step 8d: refresh and lint
 
 ```bash
 python3 scripts/memory_refresh.py
 ```
 
 The lint pass resolves every `materials/…` and `memory/…` path in your project
-file and warns if any no longer exists — which is exactly what catches a renamed
+file and warns if any no longer exists, which is exactly what catches a renamed
 or moved document before it becomes a dead link.
 
 ### Why this matters
 
 After this step, anyone (you, a colleague, or an AI agent) who opens
-`memory/projects/acme-launch.md` sees the project's current status **and** a
+`memory/projects/unilever-launch.md` sees the project's current status **and** a
 complete, click-through-able index of every piece of evidence behind it. The
 scattered downloads pile is gone; the canonical project file is the single
 entry point.

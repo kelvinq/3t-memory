@@ -1,12 +1,12 @@
 # Migrating from Claude or ChatGPT into the three-tier memory system
 
-This guide is for people whose "memory" currently lives inside a chat product —
+This guide is for people whose "memory" currently lives inside a chat product:
 a **ChatGPT Custom GPT**, a **Claude Project**, or the **saved-memory** snippets
-those tools keep — and who want to move it into a portable, file-based system
+those tools keep, and who want to move it into a portable, file-based system
 they fully own.
 
 You do **not** need to stop using ChatGPT or Claude. You are moving *where the
-durable context lives* — out of a product-locked store and into files you can
+durable context lives*: out of a product-locked store and into files you can
 open, edit, version, share, and use with any tool, today and in five years.
 
 > For a full before/after, see
@@ -43,7 +43,7 @@ belong in memory.** That is what makes the result portable.
 
 The system is just files plus three Python scripts. You can run it two ways.
 
-### With a coding agent (recommended — the system becomes self-maintaining)
+### With a coding agent (recommended, the system becomes self-maintaining)
 
 Any agent that can read and write files will do: Pi, Claude Code, Cursor, Cline,
 Aider, OpenCode, and others. Point it at the folder; it reads `AGENTS.md` and
@@ -62,7 +62,7 @@ You can still use this system with no coding agent at all:
 3. Save each into a normal folder, ideally synced via Dropbox, iCloud, Google
    Drive, or a private Git repo so it follows you across machines.
 4. Run `python3 scripts/memory_refresh.py` occasionally (Python 3.9+ only) to
-   regenerate the index. Skip it if you have no Python — the files are still
+   regenerate the index. Skip it if you have no Python; the files are still
    valid and useful, you just hand-edit the generated tables.
 
 The web-only path is more manual, but it is exactly how you stop being locked to
@@ -83,7 +83,7 @@ one product: your context lives in files, not in a vendor's feature.
 
 ---
 
-## 5. Worked example A — Claude Project → three tiers
+## 5. Worked example A: Claude Project → three tiers
 
 Imagine a Claude Project called *"Grant writing"* with custom instructions, three
 uploaded PDFs (last year's funded proposal, the funder's guidelines, a budget
@@ -122,9 +122,9 @@ my-workspace/
 - The three PDFs become tier-3 evidence, linked from the project's
   **Key documents**.
 - The project file `spring-2026-grant.md` holds status, scope, decision log, and
-  open items — the thing the chat tool had no clean place for.
+  open items: the thing the chat tool had no clean place for.
 
-## 6. Worked example B — ChatGPT Custom GPT → three tiers
+## 6. Worked example B: ChatGPT Custom GPT → three tiers
 
 A Custom GPT called *"Trip Sage"* has instructions, two uploaded reference files
 (a packing checklist, a city itinerary), and saved memory ("prefers window
@@ -142,7 +142,7 @@ real after workspace, in
 - Packing checklist + itinerary → `materials/<trip>/01-inputs/`, linked from the
   trip's project file.
 
-## 7. Worked example C — ChatGPT saved-memory → three tiers
+## 7. Worked example C: ChatGPT saved-memory → three tiers
 
 The smallest move, and often the first one people try. Open your ChatGPT
 **Settings → Personalization → Memory** (or ask "what do you remember about
@@ -152,9 +152,9 @@ Sort them into three buckets:
 
 | Bucket | Example | Destination |
 |---|---|---|
-| **Global / about you** | "I am left-handed", "I work in euros", "Tone: concise, British English" | `memory/core.md` — Purpose & context, or Key learnings |
-| **A specific project** | "The Acme deck is due 2026-07-10" | `memory/projects/acme-deck.md` — Status / Open items |
-| **Transient / throwaway** | "Remind me to call Sam tomorrow" | Delete, or a `sessions/` note — never durable memory |
+| **Global / about you** | "I am left-handed", "I work in euros", "Tone: concise, British English" | `memory/core.md`, Purpose & context or Key learnings |
+| **A specific project** | "The HSBC deck is due 2026-07-10" | `memory/projects/hsbc-deck.md`, Status / Open items |
+| **Transient / throwaway** | "Remind me to call Sam tomorrow" | Delete, or a `sessions/` note, never durable memory |
 
 The discipline here is the whole point of the system: most "saved memory" is
 either global-and-durable (→ core) or project-and-durable (→ project file).
