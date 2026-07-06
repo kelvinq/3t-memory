@@ -29,3 +29,13 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# Reversible delete — never commit the staging area
+trash/
+
+# Secrets — keep credentials and tokens out of the repo
+secrets/
+credentials/
+
+# Reserved for users who opt into a generated-files sibling folder
+memory/.generated/

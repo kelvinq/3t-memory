@@ -27,10 +27,14 @@ my-workspace/
 │       └── unilever-launch.md
 ├── materials/
 │   └── unilever-launch/
+│       ├── brief/             # optional: 5-line restart kit (read first)
 │       ├── 01-inputs/
 │       ├── 02-working/
 │       └── 03-deliverables/
+├── reference/
+│   └── frontmatter-schema.md
 ├── templates/
+├── sessions/                  # working memory (optional)
 └── scripts/
 ```
 
@@ -70,9 +74,11 @@ markers exactly where they are; the rebuild script fills between them.
 ## 4. Define your sections in `memory/_sections.json`
 
 This is the config that makes the system domain-neutral. Create
-`memory/_sections.json`. Below is a worked example for a consulting practice
-with an "Active engagements" section (sourced from project files) and a
-"Watchlist" section (sourced from `watchlist.json`):
+`memory/_sections.json`. The worked example below shows a multi-section
+schema for a small consultancy: an `active-engagements` section sourced
+from project files, an `internal-r-and-d` section also from project
+files (so two `core_section` ids route rows into different tables),
+and a `watchlist` section sourced from `memory/watchlist.json`.
 
 ```json
 {
@@ -85,7 +91,20 @@ with an "Active engagements" section (sourced from project files) and a
       "columns": [
         {"key": "title", "header": "Engagement"},
         {"key": "client", "header": "Client"},
-        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"], "joiner": " — "},
+        {"key": "_link", "header": "Detail", "link": true}
+      ]
+    },
+    {
+      "id": "internal-r-and-d",
+      "title": "Internal R&D",
+      "source": "projects",
+      "order": 2,
+      "columns": [
+        {"key": "title", "header": "Project"},
+        {"key": "owner", "header": "Owner"},
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"], "joiner": " — "},
+        {"key": "next_review_date", "header": "Review"},
         {"key": "_link", "header": "Detail", "link": true}
       ]
     },
@@ -93,10 +112,10 @@ with an "Active engagements" section (sourced from project files) and a
       "id": "watchlist",
       "title": "Watchlist",
       "source": "watchlist",
-      "order": 2,
+      "order": 3,
       "columns": [
         {"key": "project", "header": "Item"},
-        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"]}
+        {"key": "status", "header": "Status", "compose": ["status_date", "status_summary"], "joiner": " — "}
       ]
     }
   ]
@@ -105,18 +124,30 @@ with an "Active engagements" section (sourced from project files) and a
 
 Rules:
 - `source: "projects"` → the section collects active project files whose
-  `core_section` frontmatter equals this section's `id`.
+  `core_section` frontmatter equals this section's `id`. Two project
+  sections with different `id`s route different rows into different
+  tables. The same project file can only belong to one section.
 - `source: "watchlist"` → the section renders rows from `memory/watchlist.json`.
 - `columns[].key` is a frontmatter field name (e.g. `title`, `client`,
   `stage`, `next_review_date`).
-- `columns[].compose` joins several fields with ": " (handy for status lines).
-- `columns[].link: true` renders a markdown link to the project file. Use it on
-  a column whose `key` is `_link`.
+- `columns[].compose` joins several fields into one column. `columns[].joiner`
+  (default `" — "`) is the string between the joined parts. Handy for
+  status columns: `compose: ["status_date", "status_summary"]` renders
+  `2026-06-27 — Drafting launch brief; awaiting marketing assets.`
+- `columns[].link: true` renders a markdown link to the project file. Use
+  it on a column whose `key` is `_link`.
+- `columns[].core_order` arithmetic — when listing project fields by
+  order, use `core_order` in the project frontmatter. `10`, `20`, `30` is
+  better than `1`, `2`, `3` because it leaves gaps for late inserts.
 - `order` controls section ordering (otherwise declaration order is used).
 
 You can define as many project-sourced sections as you like, e.g.
-`active-engagements`, `internal-initiatives`, `references`. Each project file
-opts into one section via its `core_section` frontmatter value.
+`active-engagements`, `internal-initiatives`, `references`. Each
+project file opts into one section via its `core_section` frontmatter
+value. The exact field list for project frontmatter is at
+[`reference/frontmatter-schema.md`](reference/frontmatter-schema.md);
+add column-specific fields (like `client` for the consultancy example)
+on top.
 
 ## 5. Create your first project file
 
@@ -195,8 +226,13 @@ linked from anywhere.
 ### Step 8a: create the project's archive folders
 
 ```bash
-mkdir -p materials/unilever-launch/{01-inputs,02-working,03-deliverables}
+mkdir -p materials/unilever-launch/{brief,01-inputs,02-working,03-deliverables}
 ```
+
+`materials/<project>/brief/` is **optional**. Skip it for small
+projects; reach for it when the project has been running long enough
+that a cold-restart would otherwise mean re-reading every transcript.
+See `OPERATOR.md` §"Brief folder" for the convention.
 
 ### Step 8b: file each document by role
 
@@ -206,6 +242,7 @@ mkdir -p materials/unilever-launch/{01-inputs,02-working,03-deliverables}
 | `unilever-brief.docx` | raw input, the source brief | `materials/unilever-launch/01-inputs/` |
 | `unilever-budget.xlsx` | working artefact, numbers you iterate on | `materials/unilever-launch/02-working/` |
 | `unilever-launch-deck.pptx` | deliverable, the thing you ship | `materials/unilever-launch/03-deliverables/` |
+| `unilever-restart-notes.md` | restart kit: 5-line current status, decisions, open items | `materials/unilever-launch/brief/` (optional) |
 
 Move them:
 
@@ -214,12 +251,15 @@ mv ~/Downloads/unilever-kickoff-transcript.txt materials/unilever-launch/01-inpu
 mv ~/Downloads/unilever-brief.docx            materials/unilever-launch/01-inputs/
 mv ~/Downloads/unilever-budget.xlsx           materials/unilever-launch/02-working/
 mv ~/Downloads/unilever-launch-deck.pptx      materials/unilever-launch/03-deliverables/
+mv ~/Downloads/unilever-restart-notes.md      materials/unilever-launch/brief/
 ```
 
 Result:
 
 ```text
 materials/unilever-launch/
+├── brief/
+│   └── unilever-restart-notes.md
 ├── 01-inputs/
 │   ├── unilever-kickoff-transcript.txt
 │   └── unilever-brief.docx

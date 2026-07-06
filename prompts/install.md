@@ -71,6 +71,10 @@ Rules:
 - Prefer Markdown and plain structure over fancy formatting.
 - If existing files contain useful material, migrate it; do not rewrite from
   scratch. Do not delete anything without asking first.
+- After copying the templates, add the working rules from `AGENTS.md` §"Working
+  rules" items 5–9 (inbox staleness; brief-first load order; British English;
+  no memory references in client-facing artefacts; no external bug filings
+  without approval). These are on by default for new installs.
 
 When creating memory/core.md, include: title/owner/last updated; purpose and
 context; key collaborators; the generated-section markers; key learnings and

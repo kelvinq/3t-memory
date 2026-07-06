@@ -237,16 +237,23 @@ transient scratch notes that should never leak into durable memory.
 │       └── <project>.md          # one canonical file per project
 ├── materials/
 │   └── <project>/
+│       ├── brief/                # optional 5-line restart kit (read before 01-inputs/)
 │       ├── 01-inputs/
 │       ├── 02-working/
 │       └── 03-deliverables/
+├── reference/
+│   └── frontmatter-schema.md     # single-source-of-truth project-frontmatter schema
 ├── templates/
 │   ├── memory-core.md
-│   └── memory-project.md
+│   ├── memory-project.md
+│   ├── inbox-index.md            # template for inbox/index.md
+│   └── intake-note.md            # template for ambiguous intake items
 └── scripts/
-    ├── memory_refresh.py         # rebuild + lint
+    ├── memory_refresh.py         # rebuild + lint wrapper
     ├── rebuild-memory-core.py    # regenerate core section tables + project index
-    └── lint-memory.py            # canonical-file / size / frontmatter / link checks
+    ├── lint-memory.py            # canonical-file / size / frontmatter / link checks
+    ├── workspace_check.py        # broader-brother hygiene check (inbox, loose files, trash archives)
+    └── trash_archive.py          # archive trash/ to a 90-day zip with sha256 manifest
 ```
 
 ---
@@ -299,13 +306,22 @@ Requirements: Python 3.9+ and nothing else.
 | `prompts/install.md` | Copy-paste installer prompt (any coding agent or web interface). |
 | `prompts/migrate.md` | Copy-paste prompt to sort a pile of scattered files into the tiers. |
 | `prompts/migrate-from-claude-chatgpt.md` | Copy-paste prompt to convert a chat-tool setup into the three tiers. |
+| `prompts/daily-checkin.md` | "What am I waiting on today?" morning prompt. |
+| `prompts/daily-tidy.md` | Fully agent-run tidy-up prompt. |
+| `prompts/end-of-day-tidy.md` | Human-typed close-of-session prompt. |
+| `prompts/restore-from-trash.md` | Recovery prompt for items in the trash archive. |
 | `AGENTS.md` | Generic procedural-memory template. |
 | `OPERATOR.md` | Generic operator guide template. |
 | `templates/memory-core.md` | Core memory template (neutral placeholders). |
 | `templates/memory-project.md` | Project memory template (neutral placeholders). |
+| `templates/inbox-index.md` | Inbox intake queue template (`inbox/index.md`). |
+| `templates/intake-note.md` | Intake note template for ambiguous items. |
+| `reference/frontmatter-schema.md` | Single-source-of-truth project-frontmatter schema. |
 | `scripts/memory_refresh.py` | rebuild + lint wrapper. |
 | `scripts/rebuild-memory-core.py` | config-driven section renderer + project index. |
 | `scripts/lint-memory.py` | domain-neutral lint. |
+| `scripts/workspace_check.py` | broader-brother hygiene check (inbox, loose files, trash archive expiry). |
+| `scripts/trash_archive.py` | archive `trash/` to a 90-day zip with sha256 manifest. |
 | `memory/watchlist.json` | example watchlist (edit / empty it). |
 | `example/` | a populated, self-regenerating, lint-clean tiny workspace. |
 | `worked-examples/chatgpt-to-3t/` | a real-ish Custom GPT, shown before and after migration. |

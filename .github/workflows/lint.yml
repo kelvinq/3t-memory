@@ -28,9 +28,23 @@ jobs:
         run: |
           python3 scripts/memory_refresh.py --strict
 
+      - name: Workspace check (inbox staleness, loose root files, trash archives)
+        working-directory: example
+        run: |
+          python3 scripts/workspace_check.py --skip-refresh
+
       - name: Verify rebuild idempotency
         working-directory: example
         run: |
           cp memory/core.md /tmp/core_before.md
           python3 scripts/rebuild-memory-core.py >/dev/null
           diff -q /tmp/core_before.md memory/core.md && echo "idempotent: core.md stable across two runs"
+
+      - name: Fail if package-level trash/ is non-empty
+        run: |
+          if [ -d "trash" ] && [ -n "$(ls -A trash)" ]; then
+            echo "::error::trash/ is not empty at the package root."
+            echo "::error::Run python3 scripts/trash_archive.py to archive, then commit an empty trash/."
+            exit 1
+          fi
+          echo "trash/ is empty or absent: ok"
